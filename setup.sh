@@ -32,10 +32,31 @@ fi
 # Install Docker Desktop
 if ! command -v docker &> /dev/null; then
     echo "Installing Docker Desktop..."
+
+    # Set up Docker's apt repository
+    echo "Setting up Docker repository..."
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+    # Add the repository to apt sources
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    sudo apt update
+
+    # Download and install Docker Desktop
+    echo "Downloading Docker Desktop..."
     wget https://desktop.docker.com/linux/main/amd64/docker-desktop-amd64.deb
-    sudo apt install -y ./docker-desktop-amd64.deb
+
+    echo "Installing Docker Desktop (ignore any error message at the end)..."
+    sudo apt-get install ./docker-desktop-amd64.deb
+
     rm docker-desktop-amd64.deb
     sudo usermod -aG docker $USER
+
+    echo "Docker Desktop installed. Use 'systemctl --user start docker-desktop' to start it."
 else
     echo "Docker Desktop already installed, skipping..."
 fi
@@ -151,9 +172,10 @@ if [ "$SHELL" != "$(which zsh)" ]; then
     chsh -s $(which zsh)
 fi
 
-# Enable Docker service
-sudo systemctl enable docker
-
 echo "Setup completed!"
-echo "Restart the terminal or logout/login to apply all configurations."
-echo "Run 'newgrp docker' to use Docker without sudo."
+echo ""
+echo "Next steps:"
+echo "1. Restart your terminal or logout/login to apply all configurations"
+echo "2. Start Docker Desktop: systemctl --user start docker-desktop"
+echo "3. Enable Docker Desktop auto-start: systemctl --user enable docker-desktop"
+echo "4. Run 'newgrp docker' to use Docker without sudo (or restart your system)"

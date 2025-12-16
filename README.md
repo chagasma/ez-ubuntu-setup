@@ -80,8 +80,16 @@ The script will:
 After the script completes:
 
 1. Restart your terminal or logout/login to apply all configurations
-2. Run `newgrp docker` to use Docker without sudo (or restart your system)
-3. Verify installations:
+2. Start Docker Desktop:
+```bash
+systemctl --user start docker-desktop
+```
+3. Enable Docker Desktop auto-start (optional):
+```bash
+systemctl --user enable docker-desktop
+```
+4. Run `newgrp docker` to use Docker without sudo (or restart your system)
+5. Verify installations:
 ```bash
 zsh --version
 docker --version
@@ -127,8 +135,11 @@ Before running the script, you can customize:
 
 - The script checks if tools are already installed and skips reinstallation
 - All installations are handled via official repositories and package managers
-- Docker Desktop requires a system restart to work properly
+- Docker Desktop requires manual start after installation using `systemctl --user start docker-desktop`
+- During Docker Desktop installation, apt may display an error at the end - this is expected and can be ignored
+- Docker Desktop runs in a VM and uses a separate context from Docker Engine
 - Some tools (pyenv, uv) require shell restart to be available in PATH
+- Requires Ubuntu 22.04, 24.04, or latest non-LTS version for Docker Desktop
 
 ## Troubleshooting
 
@@ -138,7 +149,11 @@ If you encounter issues:
 2. Check your internet connection
 3. Review the script output for specific error messages
 4. Run `sudo apt update` before running the script
-5. For Docker issues, try `sudo systemctl start docker`
+5. For Docker Desktop issues:
+   - Start manually: `systemctl --user start docker-desktop`
+   - Check status: `systemctl --user status docker-desktop`
+   - View logs: `journalctl --user -u docker-desktop`
+   - Ensure your system meets requirements (Ubuntu 22.04+, x86-64 architecture)
 
 ## License
 
