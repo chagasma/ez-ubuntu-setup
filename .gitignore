@@ -1,0 +1,31 @@
+# Temporary download files (in case script fails mid-execution)
+docker-desktop-amd64.deb
+awscliv2.zip
+aws/
+packages.microsoft.gpg
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.vim/
+
+# Logs
+*.log
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# OS generated files
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
